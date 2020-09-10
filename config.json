@@ -1,19 +1,16 @@
 {
-  "base_url": "https://wutali-nextjs-netlify-blog.netlify.app",
-  "site_title": "Next.js Netlify Blog",
-  "site_description": "Next.js blog template for Netlify",
+  "base_url": "https://tech-bits.netlify.app",
+  "site_title": "Yash Soni's corner",
+  "site_description": "Yash Soni's blogs",
   "site_keywords": [
     {
-      "keyword": "Next.js"
+      "keyword": "blogging"
     },
     {
-      "keyword": "Netlify"
-    },
-    {
-      "keyword": "React"
+      "keyword": "technical blogs"
     }
   ],
   "posts_per_page": 5,
-  "twitter_account": "@my-account",
-  "github_account": "wutali"
+  "twitter_account": "@iYash_Soni",
+  "github_account": "iyashsoni"
 }

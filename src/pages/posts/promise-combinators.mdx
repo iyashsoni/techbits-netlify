@@ -1,0 +1,116 @@
+---
+slug: "promise-combinators"
+title: "JavaScript Promise Combinators - under 3 mins!"
+date: 2020-09-01
+author: iyashsoni
+tags:
+  - javascript
+  - webdev
+---
+
+In Software Development, **Parallelism** is the key to better performance.
+
+It means to carry out long-running asynchronous operations in parallel rather than serially (whenever possible).
+
+### Preface:
+
+Imagine you have to fetch quotes using a REST API, and there are 7 different categories of quotes you want to have (eg. life, love, inspirational, etc). Assume each API call takes 1 sec to give back a response.
+
+Now let's say, you want to have all 7 quotes before you show it on UI. How would you address this?
+
+If you call it serially, it will take 7 seconds total (1 for each category).
+
+But these tasks are not related, meaning the order of their execution is not important, hence they can be carried out in parallel.
+
+JavaScript has a fun way to deal with such scenarios using **Promise Combinators**.
+
+---
+
+### What are Promise Combinators?
+
+Promise Combinators, as I understand, are utility methods to deal with multiple promises that need to be executed in parallel.
+
+Each combinator method takes in an array of promises as an argument.
+
+Each combinator method in-turn returns a Promise.
+
+Let's explore them one-by-one. 🤓
+
+---
+
+### Promise.all()
+
+- This is the most used kind of combinator. An example scenario will be the one discussed above - get multiple Quotes in parallel.
+- IMPORTANT: all() will **settle** if _all_ the supplied promises have **fulfilled**, or if _any_ of them is **rejected**.
+- Always surround call to Promise.all() by `try { ... } catch(e) { ... }` blocks.
+- When we `await` Promise.all(), the result will be an array of objects returned for each promise supplied.
+
+{% codepen https://codepen.io/iyashsoni/pen/oNxeLpa default-tab=js %}
+
+### Promise.race()
+
+- This is mostly used in conditions where we want to race the execution of promises against time. An example would be, "Get me all the quotes within 500ms or you fail".
+- This is not at all limited to just race against time, it can also be a race between many asynchronous operations.
+- IMPORTANT: race() will **settle** if _any_ of the supplied promises have **fulfilled** or **rejected**. Meaning, the race will terminate after first success or failure.
+- Always a good practice to surround Promise.race() call by `try { ... } catch(e) { ... }` blocks.
+- When we `await` Promise.race(), the result will be the return value of the first settled promise.
+
+{% codepen https://codepen.io/iyashsoni/pen/mdPMGrJ default-tab=js %}
+
+Tip: Play around with the timeout value in `raceToGetData(500);` to see a different result. Try 10 😀
+
+### Promise.allSettled()
+
+- Introduced in ES2020, `allSettled` combinator should be used when the result of each promise supplied doesn't matter (either fulfilled or rejected), but still want to execute each one of it.
+- IMPORTANT: allSettled() will **settle** when _all_ the supplied promises are **settled**.
+- When we `await` Promise.allSettled(), the result will be an array of result values of all the settled promises.
+
+{% codepen https://codepen.io/iyashsoni/pen/oNxePEv default-tab=js %}
+
+### Promise.any()
+
+- Introduced in ES2021, `any` combinator should be used when you want the result of the first fulfilled promise.
+- The only difference from race combinator is that the promise rejections are neglected here.
+- IMPORTANT: any() will **settle** when _any_ of the supplied promise is **fulfilled**.
+- When we `await` Promise.any(), the result will be the result of the first fulfilled promise. If all promises are rejected, then an error will be thrown.
+- Hence, it becomes important to surround Promise.any() call by `try { ... } catch(e) { ... }` blocks.
+
+```
+const getDataFromApi = async (pathParam) => {
+  return fetch(`https://demo2202897.mockable.io/${pathParam}`).then(res => res.json());
+};
+
+const rejectAfter = (timeout) => {
+  return new Promise((resolve, reject) => {
+     setTimeout(() => reject(new Error("Operation timed out!")), timeout);
+  });
+}
+
+const getDataWhenAnyAvailable = async () => {
+  try {
+    const promises = [];
+    promises.push(getDataFromApi("qotd"));
+    promises.push(getDataFromApi("getLargeData"));
+    promises.push(rejectAfter(500));
+    const result = await Promise.any(promises);
+    console.log(result);
+  } catch (e) {
+    // all the promises were rejected
+    console.error(e);
+  }
+}
+
+getDataWhenAnyAvailable();
+```
+
+{% codepen https://codepen.io/iyashsoni/pen/LYNjJJY default-tab=js %}
+
+---
+
+P.S.: Check the browser support for any() and allSettled() combinators as they are relatively new. all() and race() are widely supported across all major browser platforms.
+
+Let me know what you guys think! 💬
+
+Follow me on [Twitter](http://twitter.com/iYash_Soni) for some awesome JavaScript tips and quizzes. Likes & Shares are highly appreciated! ❤️
+
+![](https://media.giphy.com/media/i6hulbv7glgFq/giphy.gif)

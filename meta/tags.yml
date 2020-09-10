@@ -1,13 +1,15 @@
 tags:
-  - slug: document
-    name: document
-  - slug: mock
-    name: mock
-  - slug: style
-    name: style
-  - slug: license
-    name: license
-  - slug: mdx
-    name: mdx
-  - slug: markdown
-    name: markdown
+  - slug: computerscience
+    name: computerscience
+  - slug: career
+    name: career
+  - slug: javascript
+    name: javascript
+  - slug: webdev
+    name: webdev
+  - slug: reactjs
+    name: reactjs
+  - slug: datastructures
+    name: datastructures
+  - slug: algorithms
+    name: algorithms
