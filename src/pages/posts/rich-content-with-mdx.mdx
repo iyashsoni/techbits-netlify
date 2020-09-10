@@ -31,8 +31,15 @@ import YouTube from "react-youtube";
 
 ## Twitter with react-twitter-embed
 
-import { TwitterTweetEmbed } from "react-twitter-embed";
+import { TwitterFollowButton, TwitterShareButton } from "react-twitter-embed";
 
 <p>
-  <TwitterTweetEmbed tweetId={"933354946111705097"} />
+  <TwitterFollowButton screenName="iYash_Soni" />
+</p>
+
+<p>
+  <TwitterShareButton
+    url={"http://localhost:3000/posts/rich-content-with-mdx"}
+    options={{ text: "#reactjs is awesome", via: "iYash_Soni" }}
+  />
 </p>
