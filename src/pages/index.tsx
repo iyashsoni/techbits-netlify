@@ -15,8 +15,7 @@ export default function Index() {
           <h1>
             Hi, I'm <span className="fancy">Yash Soni.</span>
           </h1>
-          <span className="handle">(known as iYashSoni on Google)</span>
-          <h2>...and this is the place where I write my heart out!</h2>
+          <h2>...and this is the place where I write my ❤️ out!</h2>
           <SocialList />
         </div>
       </div>

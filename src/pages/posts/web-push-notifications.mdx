@@ -1,0 +1,114 @@
+---
+slug: web-push-notifications
+title: Web Push Notifications - explained!
+date: 2020-05-25
+author: iyashsoni
+tags:
+  - webdev
+---
+
+![](https://dev-to-uploads.s3.amazonaws.com/i/a3d9y59ylehdcyx6xj8i.png)
+
+Hello humans of Dev.to 🙌🏻 This is my first post here. Let's go! 🎢
+
+In this article, we are targeting 3 major Browser Platforms for understanding Push Notifications in Web - Chrome, Firefox & Safari .
+
+Functionally, Chrome & Firefox are very similar. Safari is an odd one because of restrictions from Apple (We know how Apple is when it comes to Security Standards overall) 😜
+
+Let's understand the basic flow of how the Notification works in Chrome/Firefox and Safari.
+
+---
+
+## Chrome/Firefox Notifications:
+
+![](https://dev-to-uploads.s3.amazonaws.com/i/de9d64322c3ala1nj7ax.png)
+
+Understanding a couple of terms here:
+
+- Service Worker: A worker for your Website that keeps listening for background events, like "Push Notification Received". An example of a Push service worker:
+
+{% gist https://gist.github.com/iyashsoni/3f3096275590efa7adf0973976475f4d %}
+
+- Subscription Token: A unique per Browser Token which is later used to target a Notification. This token has an expiry, so you might need to request a new one after some time. An example of what a token looks like:
+
+```
+{
+"endpoint": "https://fcm.googleapis.com/fcm/send/ckjznRm-rKg:APA91bEs6ZqaooqA5CWnd9LXI1VwpfmQzUFdS_mpNYl8qaSF4WwvCe1h2QVrTYDINEPC0oZIQlYpnYBXx2BiPkORIA4U27pze1JkS0dz7o1kfzWkc5_md5uYnZUvwpyFyvPkoeIlYtMj",
+"userAuth": "gpq2UFvdWkyomEWdbJ6n3w==",
+"userPublicKey": "BNUOw0iXWjfGaIb7Q77jQaWAra72ga1Y1QHZ+g3TuBuwSr0gS0GMtP2BS/lYNGMwku8sJ4e3esChQHigVKFHnsY="
+}
+```
+
+This all may look a bit complicated to implement if you are new to all this. Worry not, I have created a helper plugin for making your lives simpler- here's the link to the [easy-web-notifications](https://www.npmjs.com/package/easy-web-notifications).
+
+Just do `npm install easy-web-notifications` and follow the instructions in the README and you're all set - from requesting User for Notification Permission to getting the Subscription Token.
+
+---
+
+## Safari Notifications:
+
+In the case of Safari, there is no notion of Service Workers. Rather, Safari handles the delivery of Notifications on its own.
+
+But here's is the weird part, you cannot directly request for Notification Permission from Safari. No no no no no…
+
+Let's see how it goes:
+![](https://dev-to-uploads.s3.amazonaws.com/i/w5wru0r52ncavh8b0qon.png)
+
+Understanding vocabulary:
+
+- Website Push ID: It is an identifier for your Web App. If your Web App is hosted as `https://www.mywebapp.com` then your Website Push ID will be `web.com.mywebapp`. This is a convention and not a rule. Please note, you cannot test Safari Notifications on the local environment, it needs to be published with HTTPS enabled.
+- Server URL: This is the URL of your Backend Server. It needs to be HTTPS and it also needs a valid certificate from a trusted authority (Self Signed certificates won't work)
+- Registration Params: This is the extra params that you need to pass to your backend server to register the device.
+- Push Package: Check this [official doc](https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/NotificationProgrammingGuideForWebsites/PushNotifications/PushNotifications.html) on building Push Package.
+
+As you can notice, Safari notifications are stricter and enforce better security, but of course at the cost of difficulty in implementation.
+
+---
+
+#### Does it mean Chrome and Firefox are not secured?
+
+Not really, Chrome and Firefox are now enforcing the use of VAPID keys.
+
+#### Wait, what VAPID now?
+
+VAPID is Voluntary Application Server Identification. In short, it is a way of authenticating the communication between your browser clients and your Backend Server. It is a set of key {public, private}.
+
+As you would guess, the public key and private key both are kept on the server-side, while only the public key is shared with the client.
+When the client is trying to subscribe to pushManager, it will carry this VAPID_PUBLIC_KEY as well. So the token that is generated is only usable from the server that has a matching pair of the VAPID key present.
+
+See the following flow to understand using VAPID:
+![](https://dev-to-uploads.s3.amazonaws.com/i/jjmnelb2eorrlax0nuh0.png)
+
+---
+
+#### How to generate VAPID keys? What library to use for sending Push Notifications?
+
+Google official docs suggest using [these libs](https://github.com/web-push-libs/) for implementing Web Push in your backend. The same library can be used for generating VAPID keys.
+In Nodejs, it is super easy to generate keys.
+Just do `npm i -g web-push`
+followed by `web-push generate-vapid-keys`
+You should see something like this:
+
+```
+=======================================
+Public Key:
+BAbNusaoI2KTIogWMlnpZ8nL93ne8GSHXTOxlqxG19Py8V9m9bIarlzIN8PErAsy1NUEahfyLdDuPV7OwFdJYYA
+Private Key:
+cun3E7GjoCvfmD1NCcIpjYtG4TmZq-0awKtBlPOX3Cc
+=======================================
+```
+
+These libraries are available for almost all major backend platforms and are actively maintained. I recommend using [npm plugin](https://github.com/web-push-libs/web-push) for its ease of use.
+
+---
+
+#### Lastly, what's Web Push Mediator?
+
+We do not send notifications directly to Browser Clients, we built up the notification with all the required data (most importantly Token) and send it to the Browser platform handler - the mediator! This Platform then takes care of routing the notification to the correct client based on the token.
+Also, we don't get to see immediate delivery of notifications across all platforms because this is solely dependant on the mediator. Generally I've found Chrome to give timely notifications.
+
+---
+
+It's been a long read I know, but I've tried to address every problem that I faced when I developed the Push Notification feature for both Client and Server-side. I hope this read helps you in some way! Ciao. 👋🏻
+
+![](https://media.giphy.com/media/lD76yTC5zxZPG/giphy.gif)
