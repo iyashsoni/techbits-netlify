@@ -20,10 +20,12 @@
     "next-mdx-enhanced": "^3.1.0",
     "normalize.css": "^8.0.1",
     "react": "16.13.1",
+    "react-codepen-embed": "^1.0.1",
     "react-dom": "16.13.1",
     "react-schemaorg": "^1.2.0",
     "react-twitter-embed": "^3.0.3",
-    "schema-dts": "^0.6.0"
+    "schema-dts": "^0.6.0",
+    "super-react-gist": "^1.0.4"
   },
   "devDependencies": {
     "@types/jest": "^26.0.9",

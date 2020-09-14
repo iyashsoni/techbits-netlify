@@ -27,7 +27,9 @@ Understanding a couple of terms here:
 
 - Service Worker: A worker for your Website that keeps listening for background events, like "Push Notification Received". An example of a Push service worker:
 
-{% gist https://gist.github.com/iyashsoni/3f3096275590efa7adf0973976475f4d %}
+import Gist from "super-react-gist";
+
+<Gist url="https://gist.github.com/iyashsoni/3f3096275590efa7adf0973976475f4d" />
 
 - Subscription Token: A unique per Browser Token which is later used to target a Notification. This token has an expiry, so you might need to request a new one after some time. An example of what a token looks like:
 
