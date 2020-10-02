@@ -1,0 +1,136 @@
+---
+slug: "debounce-vs-throttle"
+title: "JavaScript - debounce vs throttle ⏱"
+date: 2020-10-02
+author: iyashsoni
+tags:
+  - javascript
+  - webdev
+---
+
+import Codepen from "react-codepen-embed";
+
+![](https://images.pexels.com/photos/1078057/pexels-photo-1078057.jpeg)
+
+There's been a lot of confusion around what is debouncing and throttling, where to use it, and how it exactly works.
+
+We are going to demystify all of the above in the simplest possible way through this article.
+
+It is important to know both of these, it will make our lives easier in certain scenarios. (Bonus: This is a common interview question too) 🥳
+
+---
+
+Simply put,
+`Throttling` is a way to limit the number of times a function can be called. Perform a function, then drop all the function calls until a certain period of time, 
+
+`Debouncing` is a way to delay the execution of a function to a later period until there is some ongoing action.
+
+These both might seem confusing, overlapping, almost the same thing - but they are not! We will sort this out.
+
+There's no better way to learn something than learning by example. 👩‍💻👨‍💻
+
+---
+
+### Throttling:
+
+Imagine there's a button "Fetch Quote". When you click it, it triggers an asynchronous API call to fetch the quote and render it on the screen.
+
+Now, what will happen if some nutjob keeps clicking it furiously - like a million clicks till his/her fingers give up. 😑
+
+In that case, without any controlling mechanism, it will trigger a million API calls (intentionally over-exaggerated!)
+This would cause a performance drop. 
+
+You can avoid this if you had some kind of click rate-limiter in place. 
+
+**Throttle swaggers-in** 😎
+
+How does it work?
+
+![Alt Text](https://dev-to-uploads.s3.amazonaws.com/i/fxyumhcu7zjebje8gmaa.png)
+
+Here's the CodePen for the "Fetch Quote" example. Play around this a bit.
+
+<Codepen
+  hash="qBZVywp"
+  user="iyashsoni"
+  defaultTab="js,result"
+  themeId="light"
+  height="500"
+/>
+
+---
+
+### Debouncing: 
+
+Remember how the search-suggestions work? Like, when you start typing into the Google search bar it keeps on updating its suggestion list.
+
+These suggestions are actually brought from an API call. So, the question is, should you make a fresh API call every time the text changes in the input box?
+
+No, right? That would be super-bad for Google. Imagine you type "How to write better JavaScript" - 30 characters itself, leading to 30 API calls. Now imagine, millions and billions of Googlers around the world typing their queries every second - BAMMMMM!!! 💥
+
+So how do you handle this? 
+
+Before we answer that, do we really need to make an API call if the user is still typing? No. We should wait till the user has halted typing for at least some amount of time before we make an API call.
+
+This can be achieved using, yeah you guessed it right, **Debouncing**.
+
+As we stated earlier, debouncing is a way to delay the execution of a function to a later period until there is some ongoing action.
+
+The following CodePen illustrates exactly the same.
+
+<Codepen
+  hash="zYqPWaN"
+  user="iyashsoni"
+  defaultTab="js,result"
+  themeId="light"
+  height="500"
+/>
+
+---
+
+### Bonus part: Understanding the nitty-gritty 💸
+
+Let's see the function definitions of `debounce` and `throttle` in detail.
+
+> Throttle
+```
+const throttle = (func, delay) => { 
+  let toThrottle = false;
+  return function() { 
+    if(!toThrottle) {
+      toThrottle = true;
+      func.apply(this,arguments)
+      setTimeout(() => {
+        toThrottle = false
+      }, delay);
+    }
+  }; 
+};
+
+```
+
+> Debounce
+```
+const debounce = (func, delay) => { 
+  let timerId; 
+  return function() { 
+    clearTimeout(timerId) 
+    timerId = setTimeout(() => func.apply(this,arguments), delay)
+  }; 
+};
+```
+
+From the definition, we can clearly see that
+- Throttle allows execution **immediately** if the `toThrottle` flag is false. After the execution, this function will not be called until the `delay` period has lapsed.
+- Debounce **postpones** execution until there is no input change for the `delay` period of time. If a change occurs, cancel the previously scheduled execution and create a new schedule.
+
+---
+
+P.S. This article requires a prior understanding of closures, this, call, apply in JavaScript. I'm dropping a recommended reading list below to help sharpen this.
+
+1. [Understanding Bind, Call, Apply in JavaScript](https://www.taniarascia.com/this-bind-call-apply-javascript/)
+2. [Understanding setTimeout](https://www.taniarascia.com/this-bind-call-apply-javascript/)
+3. [Understanding Closures](https://blog.skay.dev/understanding-closures)
+
+Share this article if you liked it! 
+Follow on Twitter for more posts, quizzes, and articles on Tech. 😃👋
